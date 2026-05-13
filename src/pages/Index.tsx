@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Send, Sparkles, Trash2, Moon, Sun } from "lucide-react";
+import deejaLogo from "@/assets/deeja-logo.png";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -172,9 +173,7 @@ const Index = () => {
     <div className="min-h-screen flex flex-col">
       <header className="border-b bg-background/60 backdrop-blur-xl sticky top-0 z-10">
         <div className="max-w-3xl mx-auto px-4 py-3 flex items-center gap-3">
-          <div className="h-9 w-9 rounded-2xl bg-gradient-brand flex items-center justify-center shadow-glow">
-            <Sparkles className="h-5 w-5 text-primary-foreground" />
-          </div>
+          <img src={deejaLogo} alt="Deeja logo" className="h-10 w-auto" />
           <div className="flex-1">
             <h1 className="text-lg font-semibold tracking-tight">
               Deeja <span className="text-gradient-brand">v2.0</span>
@@ -204,9 +203,7 @@ const Index = () => {
         <div className="max-w-3xl mx-auto px-4 py-8 space-y-4">
           {messages.length === 0 ? (
             <div className="text-center py-20 fade-in">
-              <div className="inline-flex h-14 w-14 rounded-2xl bg-gradient-brand items-center justify-center shadow-glow mb-5">
-                <Sparkles className="h-7 w-7 text-primary-foreground" />
-              </div>
+              <img src={deejaLogo} alt="Deeja logo" className="h-20 w-auto mx-auto mb-5" />
               <h2 className="text-3xl font-semibold tracking-tight mb-2">
                 Hey, I'm <span className="text-gradient-brand">Deeja</span>.
               </h2>
