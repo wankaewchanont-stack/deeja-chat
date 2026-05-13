@@ -13,6 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Link } from "react-router-dom";
 import { toast } from "sonner";
 
 type Role = "user" | "assistant";
@@ -207,6 +208,7 @@ const Index = () => {
   };
 
   const clearChat = () => {
+    if (!window.confirm("ลบแชตทั้งหมดใช่ไหม?")) return;
     abortRef.current?.abort();
     setMessages([]);
   };
@@ -214,12 +216,11 @@ const Index = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <header className="border-b bg-background/60 backdrop-blur-xl sticky top-0 z-10">
-        <div className="max-w-3xl mx-auto px-4 py-3 flex items-center gap-3">
+        <div className="max-w-4xl mx-auto px-4 py-3 flex items-center gap-3">
           <div className="ring-gradient-persona shadow-persona">
             <img src={deejaLogo} alt="Deeja logo" className="h-9 w-9 rounded-full bg-background object-cover" />
           </div>
           <div className="flex-1">
-            <div className="mb-1"><Link to="/agent-workspace" className="text-xs text-primary underline underline-offset-4">Open Agent Workspace</Link></div>
             <h1 className="text-lg font-semibold tracking-tight">
               <span className="text-gradient-persona">Deeja</span>{" "}
               <span className="text-gradient-brand">v2.0</span>
@@ -241,27 +242,34 @@ const Index = () => {
               ))}
             </SelectContent>
           </Select>
+          <div className="flex items-center gap-1 rounded-full border px-1.5 py-1 bg-card">
           <Button variant="ghost" size="icon" onClick={() => setDark((d) => !d)} aria-label="Toggle theme">
             {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </Button>
+          </div>
+          <div className="flex items-center gap-1 rounded-full border border-destructive/30 px-1.5 py-1 bg-card">
           <Button variant="ghost" size="icon" onClick={clearChat} aria-label="Clear chat">
             <Trash2 className="h-4 w-4" />
           </Button>
+          </div>
         </div>
       </header>
 
       <main ref={scrollRef} className="flex-1 overflow-y-auto">
-        <div className="max-w-3xl mx-auto px-4 py-8 space-y-4">
+        <div className="max-w-4xl mx-auto px-4 py-4 lg:py-6 space-y-4">
           {messages.length === 0 ? (
-            <div className="text-center py-16 fade-in">
+            <div className="text-center py-6 lg:py-8 fade-in">
               <div className="inline-block ring-gradient-persona shadow-persona mb-5">
                 <img src={deejaAvatar} alt="Deeja avatar" className="h-20 w-20 rounded-full bg-background object-cover" />
               </div>
-              <h2 className="text-4xl font-semibold tracking-tight mb-2">
+              <h2 className="text-3xl lg:text-4xl font-semibold tracking-tight mb-2">
                 สวัสดี, ฉันคือ <span className="text-gradient-persona">Deeja</span>
               </h2>
               <p className="text-muted-foreground max-w-lg mx-auto">
                 AI Prompt Engineer ที่ช่วยคุณออกแบบ prompt ให้ได้ผลลัพธ์ 10/10 — เลือกโหมดแล้วเริ่มต้นด้วย template ด้านล่างได้เลย
+              </p>
+              <p className="text-xs text-muted-foreground mt-3">
+                1) เลือกโหมด 2) เลือกเทมเพลต 3) กดส่ง
               </p>
 
               <div className="flex flex-wrap justify-center gap-2 mt-6">
@@ -280,17 +288,39 @@ const Index = () => {
                 ))}
               </div>
 
-              <div className="grid sm:grid-cols-2 gap-3 mt-8 max-w-2xl mx-auto text-left">
+              <div className="max-w-3xl mx-auto mt-5 mb-4">
+                <div className="flex items-end gap-2 rounded-3xl border bg-card p-2 shadow-soft focus-within:shadow-glow transition-shadow">
+                  <Textarea
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyDown={onKeyDown}
+                    placeholder={`พิมพ์ข้อความหา Deeja ในโหมด ${mode}...`}
+                    rows={1}
+                    className="min-h-[44px] max-h-40 resize-none border-0 focus-visible:ring-0 bg-transparent"
+                  />
+                  <Button
+                    onClick={send}
+                    disabled={!input.trim() || streaming}
+                    size="icon"
+                    className="rounded-full bg-gradient-persona hover:opacity-90 shadow-persona h-10 w-10 shrink-0 text-white"
+                  >
+                    <Send className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+
+              <div className="grid sm:grid-cols-2 gap-3 mt-4 max-w-3xl mx-auto text-left">
                 {(STARTERS[mode] ?? STARTERS.P).map((s) => (
                   <button
                     key={s}
                     onClick={() => setInput(s)}
-                    className="group text-sm rounded-2xl border bg-card hover:shadow-soft hover:border-primary/40 transition px-4 py-3 text-card-foreground"
+                    className="group text-sm rounded-2xl border bg-card hover:shadow-soft hover:border-primary/40 transition px-4 py-3 text-card-foreground cursor-pointer"
                   >
-                    <span className="text-xs text-gradient-persona font-medium block mb-1">
-                      ▸ Template
+                    <span className="text-xs text-gradient-persona font-medium block mb-1 group-hover:underline">
+                      ▸ เทมเพลตพร้อมใช้
                     </span>
                     {s}
+                    <span className="block text-[11px] text-muted-foreground mt-2">คลิกเพื่อใส่ในช่องข้อความ</span>
                   </button>
                 ))}
               </div>
