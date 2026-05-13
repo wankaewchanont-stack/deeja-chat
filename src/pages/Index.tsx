@@ -63,7 +63,7 @@ const ChatBubble = ({ m, streaming }: { m: Message; streaming?: boolean }) => {
 const Index = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
-  const [mode, setMode] = useState("F");
+  const [mode, setMode] = useState("P");
   const [streaming, setStreaming] = useState(false);
   const [dark, setDark] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -182,7 +182,7 @@ const Index = () => {
             <p className="text-xs text-muted-foreground -mt-0.5">AI assistant · streaming</p>
           </div>
           <Select value={mode} onValueChange={setMode}>
-            <SelectTrigger className="w-[140px] rounded-full">
+            <SelectTrigger className="w-[180px] rounded-full">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
