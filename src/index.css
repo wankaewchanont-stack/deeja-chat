@@ -108,14 +108,27 @@
 
 @layer utilities {
   .bg-gradient-brand { background: var(--gradient-brand); }
+  .bg-gradient-persona { background: var(--gradient-persona); }
   .text-gradient-brand {
     background: var(--gradient-brand);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
   }
+  .text-gradient-persona {
+    background: var(--gradient-persona);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .ring-gradient-persona {
+    background: var(--gradient-persona);
+    padding: 2px;
+    border-radius: 9999px;
+  }
   .shadow-soft { box-shadow: var(--shadow-soft); }
   .shadow-glow { box-shadow: var(--shadow-glow); }
+  .shadow-persona { box-shadow: var(--shadow-persona); }
 
   .blink-caret::after {
     content: "▍";
