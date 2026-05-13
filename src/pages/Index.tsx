@@ -22,6 +22,7 @@ interface Message {
 }
 
 const MODES = [
+  { value: "P", label: "P · Prompt Engineer" },
   { value: "T", label: "T · Teach" },
   { value: "E", label: "E · Explore" },
   { value: "F", label: "F · Focus" },
