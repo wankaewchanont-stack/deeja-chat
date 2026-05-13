@@ -3,6 +3,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Send, Sparkles, Trash2, Moon, Sun } from "lucide-react";
 import deejaLogo from "@/assets/deeja-logo.png";
+import deejaAvatar from "@/assets/deeja-avatar.png";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -215,7 +216,7 @@ const Index = () => {
       <header className="border-b bg-background/60 backdrop-blur-xl sticky top-0 z-10">
         <div className="max-w-3xl mx-auto px-4 py-3 flex items-center gap-3">
           <div className="ring-gradient-persona shadow-persona">
-            <img src={deejaLogo} alt="Deeja avatar" className="h-9 w-9 rounded-full bg-background object-cover" />
+            <img src={deejaLogo} alt="Deeja logo" className="h-9 w-9 rounded-full bg-background object-cover" />
           </div>
           <div className="flex-1">
             <h1 className="text-lg font-semibold tracking-tight">
@@ -253,7 +254,7 @@ const Index = () => {
           {messages.length === 0 ? (
             <div className="text-center py-16 fade-in">
               <div className="inline-block ring-gradient-persona shadow-persona mb-5">
-                <img src={deejaLogo} alt="Deeja" className="h-20 w-20 rounded-full bg-background object-cover" />
+                <img src={deejaAvatar} alt="Deeja avatar" className="h-20 w-20 rounded-full bg-background object-cover" />
               </div>
               <h2 className="text-4xl font-semibold tracking-tight mb-2">
                 สวัสดี, ฉันคือ <span className="text-gradient-persona">Deeja</span>
