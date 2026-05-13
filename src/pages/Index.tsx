@@ -22,11 +22,51 @@ interface Message {
 }
 
 const MODES = [
-  { value: "P", label: "P · Prompt Engineer" },
-  { value: "T", label: "T · Teach" },
-  { value: "E", label: "E · Explore" },
-  { value: "F", label: "F · Focus" },
-  { value: "R", label: "R · Reflect" },
+  { value: "P", label: "P · Prompt Engineer", tag: "Optimize prompts" },
+  { value: "T", label: "T · Teach", tag: "Learn step-by-step" },
+  { value: "E", label: "E · Explore", tag: "Brainstorm ideas" },
+  { value: "F", label: "F · Focus", tag: "Sharp & concise" },
+  { value: "R", label: "R · Reflect", tag: "Deeper thinking" },
+];
+
+const STARTERS: Record<string, string[]> = {
+  P: [
+    "ปรับ prompt นี้ให้ได้ output 10/10: 'เขียนโพสต์ขายของ'",
+    "สร้าง prompt สำหรับวิเคราะห์คู่แข่งทางธุรกิจ",
+    "ออกแบบ prompt ให้ AI สอนเขียนโค้ดแบบมืออาชีพ",
+    "ทำ prompt template สำหรับ content marketing",
+  ],
+  T: [
+    "อธิบาย quantum entanglement แบบเข้าใจง่าย",
+    "สอนใช้ React hooks ตั้งแต่เริ่มต้น",
+    "TypeScript generics ทำงานยังไง?",
+    "อธิบาย RAG ในระบบ AI แบบสั้นๆ",
+  ],
+  E: [
+    "ไอเดียโปรเจกต์ AI สำหรับสุดสัปดาห์",
+    "Brainstorm ชื่อแบรนด์สำหรับ AI startup",
+    "เสนอ 5 มุมมองใหม่ของการใช้ LLM",
+    "ไอเดีย side project ที่ทำเงินได้",
+  ],
+  F: [
+    "สรุปข้อดี-ข้อเสียของ Vercel vs Netlify",
+    "เขียน follow-up email สั้นๆ ให้สุภาพ",
+    "List 5 ข้อในการ optimize React app",
+    "Action plan 1 สัปดาห์เพิ่ม productivity",
+  ],
+  R: [
+    "ฉันควรเปลี่ยนงานหรือไม่? ช่วยถามคำถามสะท้อนคิด",
+    "วิเคราะห์ pattern ความล้มเหลวที่ผ่านมา",
+    "ช่วยวางเป้าหมายชีวิต 5 ปีข้างหน้า",
+    "สะท้อนสิ่งที่เรียนรู้จากสัปดาห์นี้",
+  ],
+};
+
+const FOLLOWUPS = [
+  "ขยายความให้ลึกขึ้น",
+  "ยกตัวอย่างประกอบ",
+  "ทำเป็น checklist ใช้ได้จริง",
+  "เปรียบเทียบทางเลือกอื่น",
 ];
 
 const FN_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
