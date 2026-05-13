@@ -13,9 +13,9 @@
     --popover: 0 0% 100%;
     --popover-foreground: 220 20% 12%;
 
-    --primary: 158 64% 42%;
+    --primary: 258 86% 60%;
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 168 76% 58%;
+    --primary-glow: 190 96% 56%;
 
     --secondary: 220 14% 96%;
     --secondary-foreground: 220 20% 12%;
@@ -23,28 +23,32 @@
     --muted: 220 14% 96%;
     --muted-foreground: 220 10% 46%;
 
-    --accent: 168 76% 92%;
-    --accent-foreground: 158 64% 24%;
+    --accent: 258 86% 95%;
+    --accent-foreground: 258 86% 30%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
     --border: 220 13% 91%;
     --input: 220 13% 91%;
-    --ring: 158 64% 42%;
+    --ring: 258 86% 60%;
 
     --radius: 1rem;
 
-    --bubble-user: 158 64% 42%;
+    --bubble-user: 258 86% 60%;
     --bubble-user-foreground: 0 0% 100%;
     --bubble-assistant: 0 0% 100%;
     --bubble-assistant-foreground: 220 20% 12%;
 
-    --gradient-brand: linear-gradient(135deg, hsl(158 64% 42%), hsl(168 76% 58%));
-    --gradient-bg: radial-gradient(1200px 600px at 10% -10%, hsl(168 76% 92% / 0.6), transparent 60%),
-                   radial-gradient(900px 500px at 100% 0%, hsl(158 64% 90% / 0.5), transparent 60%);
+    /* System gradient: Purple -> Blue -> Cyan */
+    --gradient-brand: linear-gradient(135deg, hsl(270 85% 60%), hsl(220 90% 58%) 50%, hsl(190 96% 56%));
+    /* Persona gradient: Orange -> Green -> Gold (Deeja avatar/CTA) */
+    --gradient-persona: linear-gradient(135deg, hsl(22 95% 58%), hsl(145 65% 48%) 55%, hsl(45 95% 58%));
+    --gradient-bg: radial-gradient(1200px 600px at 10% -10%, hsl(258 86% 92% / 0.55), transparent 60%),
+                   radial-gradient(900px 500px at 100% 0%, hsl(190 96% 90% / 0.5), transparent 60%);
     --shadow-soft: 0 4px 24px -8px hsl(220 30% 20% / 0.08);
-    --shadow-glow: 0 8px 32px -8px hsl(158 64% 42% / 0.35);
+    --shadow-glow: 0 8px 32px -8px hsl(258 86% 60% / 0.4);
+    --shadow-persona: 0 8px 32px -8px hsl(22 95% 58% / 0.45);
   }
 
   .dark {
@@ -57,9 +61,9 @@
     --popover: 220 22% 10%;
     --popover-foreground: 220 15% 95%;
 
-    --primary: 168 76% 58%;
+    --primary: 270 90% 70%;
     --primary-foreground: 220 25% 7%;
-    --primary-glow: 158 64% 50%;
+    --primary-glow: 190 96% 60%;
 
     --secondary: 220 18% 14%;
     --secondary-foreground: 220 15% 95%;
@@ -67,26 +71,28 @@
     --muted: 220 18% 14%;
     --muted-foreground: 220 10% 65%;
 
-    --accent: 168 76% 18%;
-    --accent-foreground: 168 76% 85%;
+    --accent: 258 70% 22%;
+    --accent-foreground: 258 90% 88%;
 
     --destructive: 0 70% 50%;
     --destructive-foreground: 0 0% 100%;
 
     --border: 220 18% 18%;
     --input: 220 18% 18%;
-    --ring: 168 76% 58%;
+    --ring: 270 90% 70%;
 
-    --bubble-user: 168 76% 58%;
-    --bubble-user-foreground: 220 25% 7%;
+    --bubble-user: 270 85% 62%;
+    --bubble-user-foreground: 0 0% 100%;
     --bubble-assistant: 220 22% 12%;
     --bubble-assistant-foreground: 220 15% 95%;
 
-    --gradient-brand: linear-gradient(135deg, hsl(158 64% 42%), hsl(168 76% 58%));
-    --gradient-bg: radial-gradient(1200px 600px at 10% -10%, hsl(168 76% 18% / 0.4), transparent 60%),
-                   radial-gradient(900px 500px at 100% 0%, hsl(158 64% 20% / 0.3), transparent 60%);
+    --gradient-brand: linear-gradient(135deg, hsl(270 90% 65%), hsl(220 90% 60%) 50%, hsl(190 96% 60%));
+    --gradient-persona: linear-gradient(135deg, hsl(22 95% 60%), hsl(145 60% 50%) 55%, hsl(45 95% 60%));
+    --gradient-bg: radial-gradient(1200px 600px at 10% -10%, hsl(270 70% 20% / 0.45), transparent 60%),
+                   radial-gradient(900px 500px at 100% 0%, hsl(190 70% 18% / 0.35), transparent 60%);
     --shadow-soft: 0 4px 24px -8px hsl(0 0% 0% / 0.5);
-    --shadow-glow: 0 8px 32px -8px hsl(168 76% 58% / 0.4);
+    --shadow-glow: 0 8px 32px -8px hsl(270 90% 65% / 0.45);
+    --shadow-persona: 0 8px 32px -8px hsl(22 95% 60% / 0.5);
   }
 }
 
@@ -102,14 +108,27 @@
 
 @layer utilities {
   .bg-gradient-brand { background: var(--gradient-brand); }
+  .bg-gradient-persona { background: var(--gradient-persona); }
   .text-gradient-brand {
     background: var(--gradient-brand);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
   }
+  .text-gradient-persona {
+    background: var(--gradient-persona);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .ring-gradient-persona {
+    background: var(--gradient-persona);
+    padding: 2px;
+    border-radius: 9999px;
+  }
   .shadow-soft { box-shadow: var(--shadow-soft); }
   .shadow-glow { box-shadow: var(--shadow-glow); }
+  .shadow-persona { box-shadow: var(--shadow-persona); }
 
   .blink-caret::after {
     content: "▍";

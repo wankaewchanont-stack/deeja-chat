@@ -22,11 +22,51 @@ interface Message {
 }
 
 const MODES = [
-  { value: "P", label: "P · Prompt Engineer" },
-  { value: "T", label: "T · Teach" },
-  { value: "E", label: "E · Explore" },
-  { value: "F", label: "F · Focus" },
-  { value: "R", label: "R · Reflect" },
+  { value: "P", label: "P · Prompt Engineer", tag: "Optimize prompts" },
+  { value: "T", label: "T · Teach", tag: "Learn step-by-step" },
+  { value: "E", label: "E · Explore", tag: "Brainstorm ideas" },
+  { value: "F", label: "F · Focus", tag: "Sharp & concise" },
+  { value: "R", label: "R · Reflect", tag: "Deeper thinking" },
+];
+
+const STARTERS: Record<string, string[]> = {
+  P: [
+    "ปรับ prompt นี้ให้ได้ output 10/10: 'เขียนโพสต์ขายของ'",
+    "สร้าง prompt สำหรับวิเคราะห์คู่แข่งทางธุรกิจ",
+    "ออกแบบ prompt ให้ AI สอนเขียนโค้ดแบบมืออาชีพ",
+    "ทำ prompt template สำหรับ content marketing",
+  ],
+  T: [
+    "อธิบาย quantum entanglement แบบเข้าใจง่าย",
+    "สอนใช้ React hooks ตั้งแต่เริ่มต้น",
+    "TypeScript generics ทำงานยังไง?",
+    "อธิบาย RAG ในระบบ AI แบบสั้นๆ",
+  ],
+  E: [
+    "ไอเดียโปรเจกต์ AI สำหรับสุดสัปดาห์",
+    "Brainstorm ชื่อแบรนด์สำหรับ AI startup",
+    "เสนอ 5 มุมมองใหม่ของการใช้ LLM",
+    "ไอเดีย side project ที่ทำเงินได้",
+  ],
+  F: [
+    "สรุปข้อดี-ข้อเสียของ Vercel vs Netlify",
+    "เขียน follow-up email สั้นๆ ให้สุภาพ",
+    "List 5 ข้อในการ optimize React app",
+    "Action plan 1 สัปดาห์เพิ่ม productivity",
+  ],
+  R: [
+    "ฉันควรเปลี่ยนงานหรือไม่? ช่วยถามคำถามสะท้อนคิด",
+    "วิเคราะห์ pattern ความล้มเหลวที่ผ่านมา",
+    "ช่วยวางเป้าหมายชีวิต 5 ปีข้างหน้า",
+    "สะท้อนสิ่งที่เรียนรู้จากสัปดาห์นี้",
+  ],
+};
+
+const FOLLOWUPS = [
+  "ขยายความให้ลึกขึ้น",
+  "ยกตัวอย่างประกอบ",
+  "ทำเป็น checklist ใช้ได้จริง",
+  "เปรียบเทียบทางเลือกอื่น",
 ];
 
 const FN_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
@@ -174,20 +214,28 @@ const Index = () => {
     <div className="min-h-screen flex flex-col">
       <header className="border-b bg-background/60 backdrop-blur-xl sticky top-0 z-10">
         <div className="max-w-3xl mx-auto px-4 py-3 flex items-center gap-3">
-          <img src={deejaLogo} alt="Deeja logo" className="h-10 w-auto" />
+          <div className="ring-gradient-persona shadow-persona">
+            <img src={deejaLogo} alt="Deeja avatar" className="h-9 w-9 rounded-full bg-background object-cover" />
+          </div>
           <div className="flex-1">
             <h1 className="text-lg font-semibold tracking-tight">
-              Deeja <span className="text-gradient-brand">v2.0</span>
+              <span className="text-gradient-persona">Deeja</span>{" "}
+              <span className="text-gradient-brand">v2.0</span>
             </h1>
-            <p className="text-xs text-muted-foreground -mt-0.5">AI assistant · streaming</p>
+            <p className="text-xs text-muted-foreground -mt-0.5">AI Prompt Engineer · Guided Experience</p>
           </div>
           <Select value={mode} onValueChange={setMode}>
-            <SelectTrigger className="w-[180px] rounded-full">
+            <SelectTrigger className="w-[200px] rounded-full">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
               {MODES.map((m) => (
-                <SelectItem key={m.value} value={m.value}>{m.label}</SelectItem>
+                <SelectItem key={m.value} value={m.value}>
+                  <div className="flex flex-col">
+                    <span>{m.label}</span>
+                    <span className="text-xs text-muted-foreground">{m.tag}</span>
+                  </div>
+                </SelectItem>
               ))}
             </SelectContent>
           </Select>
@@ -203,39 +251,74 @@ const Index = () => {
       <main ref={scrollRef} className="flex-1 overflow-y-auto">
         <div className="max-w-3xl mx-auto px-4 py-8 space-y-4">
           {messages.length === 0 ? (
-            <div className="text-center py-20 fade-in">
-              <img src={deejaLogo} alt="Deeja logo" className="h-20 w-auto mx-auto mb-5" />
-              <h2 className="text-3xl font-semibold tracking-tight mb-2">
-                Hey, I'm <span className="text-gradient-brand">Deeja</span>.
+            <div className="text-center py-16 fade-in">
+              <div className="inline-block ring-gradient-persona shadow-persona mb-5">
+                <img src={deejaLogo} alt="Deeja" className="h-20 w-20 rounded-full bg-background object-cover" />
+              </div>
+              <h2 className="text-4xl font-semibold tracking-tight mb-2">
+                สวัสดี, ฉันคือ <span className="text-gradient-persona">Deeja</span>
               </h2>
-              <p className="text-muted-foreground max-w-md mx-auto">
-                Pick a mode and ask me anything. I respond in real-time with streaming.
+              <p className="text-muted-foreground max-w-lg mx-auto">
+                AI Prompt Engineer ที่ช่วยคุณออกแบบ prompt ให้ได้ผลลัพธ์ 10/10 — เลือกโหมดแล้วเริ่มต้นด้วย template ด้านล่างได้เลย
               </p>
-              <div className="grid sm:grid-cols-2 gap-3 mt-8 max-w-xl mx-auto text-left">
-                {[
-                  "Explain quantum entanglement simply",
-                  "Draft a polite follow-up email",
-                  "Compare React vs Vue for a startup",
-                  "Brainstorm a weekend project",
-                ].map((s) => (
+
+              <div className="flex flex-wrap justify-center gap-2 mt-6">
+                {MODES.map((m) => (
+                  <button
+                    key={m.value}
+                    onClick={() => setMode(m.value)}
+                    className={`text-xs px-3 py-1.5 rounded-full border transition ${
+                      mode === m.value
+                        ? "bg-gradient-brand text-white border-transparent shadow-glow"
+                        : "bg-card hover:border-primary/40"
+                    }`}
+                  >
+                    {m.label}
+                  </button>
+                ))}
+              </div>
+
+              <div className="grid sm:grid-cols-2 gap-3 mt-8 max-w-2xl mx-auto text-left">
+                {(STARTERS[mode] ?? STARTERS.P).map((s) => (
                   <button
                     key={s}
                     onClick={() => setInput(s)}
-                    className="text-sm rounded-2xl border bg-card hover:shadow-soft hover:border-primary/40 transition px-4 py-3 text-card-foreground"
+                    className="group text-sm rounded-2xl border bg-card hover:shadow-soft hover:border-primary/40 transition px-4 py-3 text-card-foreground"
                   >
+                    <span className="text-xs text-gradient-persona font-medium block mb-1">
+                      ▸ Template
+                    </span>
                     {s}
                   </button>
                 ))}
               </div>
             </div>
           ) : (
-            messages.map((m, i) => (
-              <ChatBubble
-                key={m.id}
-                m={m}
-                streaming={streaming && i === messages.length - 1 && m.role === "assistant"}
-              />
-            ))
+            <>
+              {messages.map((m, i) => (
+                <ChatBubble
+                  key={m.id}
+                  m={m}
+                  streaming={streaming && i === messages.length - 1 && m.role === "assistant"}
+                />
+              ))}
+              {!streaming && messages.length > 0 && messages[messages.length - 1].role === "assistant" && (
+                <div className="fade-in pt-2">
+                  <p className="text-xs text-muted-foreground mb-2">✨ Smart Assist · ลองถามต่อ:</p>
+                  <div className="flex flex-wrap gap-2">
+                    {FOLLOWUPS.map((f) => (
+                      <button
+                        key={f}
+                        onClick={() => setInput(f)}
+                        className="text-xs px-3 py-1.5 rounded-full border bg-card hover:border-primary/40 hover:shadow-soft transition"
+                      >
+                        {f}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </>
           )}
         </div>
       </main>
@@ -247,7 +330,7 @@ const Index = () => {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={onKeyDown}
-              placeholder="Message Deeja…"
+              placeholder={`Message Deeja in ${mode} mode…`}
               rows={1}
               className="min-h-[44px] max-h-40 resize-none border-0 focus-visible:ring-0 bg-transparent"
             />
@@ -255,13 +338,13 @@ const Index = () => {
               onClick={send}
               disabled={!input.trim() || streaming}
               size="icon"
-              className="rounded-full bg-gradient-brand hover:opacity-90 shadow-glow h-10 w-10 shrink-0"
+              className="rounded-full bg-gradient-persona hover:opacity-90 shadow-persona h-10 w-10 shrink-0 text-white"
             >
               <Send className="h-4 w-4" />
             </Button>
           </div>
           <p className="text-xs text-muted-foreground text-center mt-2">
-            Enter to send · Shift+Enter for newline · Mode {mode}
+            Enter to send · Shift+Enter for newline · Mode <span className="text-gradient-persona font-semibold">{mode}</span>
           </p>
         </div>
       </footer>
