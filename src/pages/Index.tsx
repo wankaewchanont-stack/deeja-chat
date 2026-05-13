@@ -219,6 +219,7 @@ const Index = () => {
             <img src={deejaLogo} alt="Deeja logo" className="h-9 w-9 rounded-full bg-background object-cover" />
           </div>
           <div className="flex-1">
+            <div className="mb-1"><Link to="/agent-workspace" className="text-xs text-primary underline underline-offset-4">Open Agent Workspace</Link></div>
             <h1 className="text-lg font-semibold tracking-tight">
               <span className="text-gradient-persona">Deeja</span>{" "}
               <span className="text-gradient-brand">v2.0</span>
