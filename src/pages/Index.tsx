@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { Send, Sparkles, Trash2, Moon, Sun } from "lucide-react";
+import { Send, Trash2, Moon, Sun } from "lucide-react";
 import deejaLogo from "@/assets/deeja-logo.png";
 import deejaAvatar from "@/assets/deeja-avatar.png";
 import { Button } from "@/components/ui/button";
@@ -13,7 +13,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Link } from "react-router-dom";
 import { toast } from "sonner";
 
 type Role = "user" | "assistant";
@@ -71,7 +70,8 @@ const FOLLOWUPS = [
   "เปรียบเทียบทางเลือกอื่น",
 ];
 
-const FN_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
+const FN_URL = `/functions/v1/chat`;
+const LANDING_URL = "https://deeja-landing.vercel.app";
 
 const ChatBubble = ({ m, streaming }: { m: Message; streaming?: boolean }) => {
   const isUser = m.role === "user";
@@ -242,6 +242,12 @@ const Index = () => {
               ))}
             </SelectContent>
           </Select>
+          <a
+            href={LANDING_URL}
+            className="hidden sm:inline-flex h-9 items-center rounded-full border bg-card px-3 text-xs font-medium text-muted-foreground transition hover:border-primary/40 hover:text-foreground"
+          >
+            Back to Deeja Landing
+          </a>
           <div className="flex items-center gap-1 rounded-full border px-1.5 py-1 bg-card">
           <Button variant="ghost" size="icon" onClick={() => setDark((d) => !d)} aria-label="Toggle theme">
             {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
