@@ -1,8 +1,25 @@
 // Deeja v2.0 AI streaming chat via Lovable AI Gateway
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-};
+const DEFAULT_ALLOWED_ORIGINS = [
+  "http://localhost:3000",
+  "http://localhost:3001",
+  "http://localhost:3002",
+];
+
+function getAllowedOrigins() {
+  const raw = Deno.env.get("CORS_ALLOWED_ORIGINS");
+  if (!raw) return DEFAULT_ALLOWED_ORIGINS;
+  return raw.split(",").map((s) => s.trim()).filter(Boolean);
+}
+
+function buildCorsHeaders(origin: string | null) {
+  const allowedOrigins = getAllowedOrigins();
+  const allowOrigin = origin && allowedOrigins.includes(origin) ? origin : allowedOrigins[0];
+  return {
+    "Access-Control-Allow-Origin": allowOrigin,
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+    "Vary": "Origin",
+  };
+}
 
 const PROMPT_ENGINEER_FRAMEWORK = `🧠 ACTIVE MODE: Prompt Engineer (Deeja v2.0 Framework)
 
@@ -61,7 +78,29 @@ function rateLimited(ip: string) {
   return entry.count > LIMIT;
 }
 
+type ChatRole = "user" | "assistant";
+type ChatMessage = { role: ChatRole; content: string };
+
+function parseAndValidateBody(body: unknown): { mode: string; messages: ChatMessage[] } {
+  if (!body || typeof body !== "object") throw new Error("invalid request body");
+  const source = body as Record<string, unknown>;
+  const mode = typeof source.mode === "string" ? source.mode : "F";
+  const messages = source.messages;
+  if (!Array.isArray(messages) || messages.length === 0) {
+    throw new Error("messages required");
+  }
+
+  const cleaned = messages
+    .filter((m): m is Record<string, unknown> => !!m && typeof m === "object")
+    .filter((m) => (m.role === "user" || m.role === "assistant") && typeof m.content === "string")
+    .map((m) => ({ role: m.role as ChatRole, content: (m.content as string).slice(0, 8000) }));
+
+  if (cleaned.length === 0) throw new Error("no valid messages");
+  return { mode, messages: cleaned };
+}
+
 Deno.serve(async (req) => {
+  const corsHeaders = buildCorsHeaders(req.headers.get("origin"));
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
@@ -73,21 +112,16 @@ Deno.serve(async (req) => {
       });
     }
 
-    const body = await req.json();
-    const messages = Array.isArray(body?.messages) ? body.messages : null;
-    const mode = typeof body?.mode === "string" ? body.mode : "F";
-
-    if (!messages || messages.length === 0) {
+    let parsed: { mode: string; messages: ChatMessage[] };
+    try {
+      parsed = parseAndValidateBody(await req.json());
+    } catch (err) {
       return new Response(JSON.stringify({ error: "messages required" }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
-
-    // Validate & sanitize messages
-    const cleaned = messages
-      .filter((m: any) => m && (m.role === "user" || m.role === "assistant") && typeof m.content === "string")
-      .map((m: any) => ({ role: m.role, content: m.content.slice(0, 8000) }));
+    const { mode, messages: cleaned } = parsed;
 
     // Trim history: keep last 20 messages for cost control
     const trimmed = cleaned.slice(-20);
